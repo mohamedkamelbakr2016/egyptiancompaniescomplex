@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>مجمع الشركات المصرية العربية الدولية</title>
+<style>
+  /* قواعد عامة */
+  body, html {
+    margin: 0; padding: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: #fff; color: #333;
+    scroll-behavior: smooth;
+  }
+  a {
+    color: #004080;
+    text-decoration: none;
+  }
+  a:hover, a:focus {
+    text-decoration: underline;
+  }
+
+  /* الهيدر */
+  header {
+    position: fixed;
+    top: 0; right: 0; left: 0;
+    background-color: #004080;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 17px;
+    box-sizing: border-box;
+    z-index: 1000;
+  }
+  .header-left, .header-center, .header-right {
+    display: flex;
+    align-items: center;
+  }
+  .header-left {
+    gap: 10px;
+  }
+  .header-left button {
+    background: none;
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 15px;
+  }
+  .header-left button:hover, .header-left button:focus {
+    text-decoration: underline;
+  }
+  .header-center {
+    flex-direction: column;
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 1.2;
+  }
+  .header-center .arabic {
+    font-size: 22px;
+    font-weight: 800;
+  }
+  .header-center .english {
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .header-right img {
+    width: 40px;
+    height: auto;
+  }
+
+  /* التنقل */
+  nav {
+    position: fixed;
+    top: 52px;
+    right: 0; left: 0;
+    background: #0059cc;
+    padding: 8px 20px;
+    box-sizing: border-box;
+    z-index: 999;
+    font-weight: 700;
+  }
+  nav ul {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    flex-wrap: wrap;
+  }
+  nav ul li {
+    position: relative;
+  }
+  nav ul li a {
+    color: white;
+    font-size: 15px;
+    padding: 6px 10px;
+    display: inline-block;
+  }
+  nav ul li a:focus,
+  nav ul li:hover > a {
+    text-decoration: underline;
+    outline: none;
+  }
+
+  /* القائمة المنسدلة */
+  nav ul li ul.dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    background: #0059b3;
+    border-radius: 0 0 5px 5px;
+    min-width: 200px;
+    padding: 5px 0;
+    z-index: 1001;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  }
+  nav ul li:hover ul.dropdown,
+  nav ul li:focus-within ul.dropdown {
+    display: block;
+  }
+  nav ul li ul.dropdown li a {
+    padding: 10px 15px;
+    font-weight: normal;
+    display: block;
+    white-space: nowrap;
+    font-size: 15px;
+  }
+  nav ul li ul.dropdown li a:hover,
+  nav ul li ul.dropdown li a:focus {
+    background-color: #003d66;
+    outline: none;
+  }
+
+  /* التنقل للموبايل */
+  @media (max-width: 768px) {
+    header {
+      flex-wrap: wrap;
+      padding: 10px;
+    }
+    .header-center {
+      order: 3;
+      width: 100%;
+      margin: 10px 0 0 0;
+    }
+    nav {
+      position: static;
+      background: #004080;
+      padding: 10px 15px;
+    }
+    nav ul {
+      flex-direction: column;
+      gap: 5px;
+    }
+    nav ul li {
+      width: 100%;
+    }
+    nav ul li ul.dropdown {
+      position: static;
+      border-radius: 0;
+      box-shadow: none;
+      padding-left: 15px;
+      display: none !important; /* سنتحكم بالعرض من جافاسكريبت */
+      background: #003d66;
+      margin-top: 5px;
+    }
+    nav ul li.show-dropdown ul.dropdown {
+      display: block !important;
+    }
+    nav ul li a {
+      padding: 10px 15px;
+      font-size: 16px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav ul li a.dropdown-toggle {
+      cursor: pointer;
+    }
+  }
+
+  /* المحتوى الرئيسي */
+  main {
+    padding-top: 92px;
+    max-width: 1200px;
+    margin: 20px auto 40px;
+  }
+  main section {
+    margin-bottom: 40px;
+    line-height: 1.6;
+  }
+  main section h2, main section h3 {
+    font-weight: 700;
+    margin-bottom: 15px;
+  }
+
+  /* الأقسام ذات الخلفيات والصور */
+  .service-section {
+    position: relative;
+    height: 400px;
+    color: #000;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-size: cover;
+    background-position: center center;
+  }
+  .service-section > div {
+    background: rgba(255, 255, 255, 0.25);
+    padding: 25px 30px;
+    max-width: 700px;
+    font-size: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.15);
+  }
+
+  /* التواصل */
+  #contact p {
+    margin: 8px 0;
+  }
+  #contact a {
+    font-weight: 700;
+  }
+
+  /* الفوتر */
+  footer {
+    background: #004080;
+    color: white;
+    text-align: center;
+    padding: 15px 10px;
+    font-size: 14px;
+  }
+  footer a {
+    color: #cce0ff;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <button id="langToggle" aria-label="تغيير اللغة">عربي</button>
+  </div>
+
+  <div class="header-center" role="banner">
+    <div class="arabic">مجمع الشركات المصرية العربية الدولية</div>
+    <div class="english">Egyptian Arab International Companies Complex</div>
+  </div>
+
+  <div class="header-right" aria-label="علم مصر">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Egypt.svg" alt="علم مصر" />
+  </div>
+</header>
+
+<nav aria-label="القائمة الرئيسية">
+  <ul>
+    <li><a href="#about">من نحن</a></li>
+    <li class="has-dropdown">
+      <a href="#" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="servicesDropdown">الخدمات المقدمة ▼</a>
+      <ul class="dropdown" id="servicesDropdown" role="menu" aria-label="الخدمات المقدمة">
+        <li><a href="#manufacturing" role="menuitem">تصنيع وتعبئة وتغليف المواد الغذائية</a></li>
+        <li><a href="#trade" role="menuitem">التجارة العامة والتوريدات العمومية</a></li>
+        <li><a href="#land" role="menuitem">إستصلاح وإستثمار الأراضي</a></li>
+        <li><a href="#animal" role="menuitem">مشروعات الثروة الحيوانية والداجنة والسمكية</a></li>
+        <li><a href="#contracting" role="menuitem">المقاولات العامة والتشطيبات</a></li>
+        <li><a href="#realestate" role="menuitem">التطوير والتسويق العقاري</a></li>
+        <li><a href="#management" role="menuitem">إدارة وتمويل المشروعات الإستثمارية</a></li>
+        <li><a href="#marketing" role="menuitem">التسويق والتجارة الإلكترونية</a></li>
+      </ul>
+    </li>
+    <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSd5g3PRO3fG0-UQ8Kqs9MuJN7KzXBhV_MySt5PsLTyq5f5Gig/viewform" target="_blank" rel="noopener noreferrer">المساهمين والمستثمرين</a></li>
+
+    <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSd3rH2vwBqrHyhsyiz2E6kc0cLEIfKUZ7_GwBIsSrIXAbFZ_w/viewform" target="_blank" rel="noopener noreferrer">التقديم على الوظائف</a></li>
+    <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSe_1u5KWXbloWGumZhsKuKdX7NrCcURDEKvyuj9Up5hJJmq4g/viewform" target="_blank" rel="noopener noreferrer">التقديم على التمويلات</a></li>
+      <li><a href="management-vision.html">رؤية مجلس الإدارة</a></li>
+    <li><a href="chairman-word.html">كلمة رئيس مجلس الإدارة</a></li>
+    <li><a href="branches.html">فروعنا وإداراتنا</a></li>
+
+</ul>
+</nav>
+
+<main>
+ <!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>من نحن - مجمع الشركات</title>
+  <style>
+    body {
+      font-family: Tahoma, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+
+    section#about {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 40px;
+      background-color: #fff;
+    }
+
+    .about-text {
+      flex: 1;
+      font-size: 16px;
+      font-weight: bold;
+      line-height: 1.8;
+      color: #333;
+    }
+
+    .slider {
+      flex: 1;
+      position: relative;
+      width: 100%;
+      height: 400px;
+      overflow: hidden;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .slider img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .slider img.active {
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      section#about {
+        flex-direction: column;
+      }
+
+      .slider {
+        height: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<section id="about" aria-labelledby="aboutTitle">
+  <div class="about-text">
+    <h2 id="aboutTitle">من نحن</h2>
+    <p>
+      مجمع الشركات المصرية العربية الدولية هو الكيان الإستثماري الفريد من نوعه فهو يضم مجموعة متكاملة من الشركات والمؤسسات المتخصصة على مستوى السوق الدولى في كافة المجالات منها التصنيع ، التجارة ، المقاولات العامة ، التطوير والإستثمار العقاري ، والتمويلات الإستثمارية تحت لواء مصري ممثل بشركة مساهمة مصرية. فنحن نسعى لتحقيق التميز والإبتكار من خلال تقديم حلول متكاملة فى شتى المجالات التى نتبناها والتى تعزز مكانتنا كشريك إستراتيجي قوى وموثوق فيه بالأسواق المحلية والدولية. وهو كيان قوى يوفر أكثر من 30 ألف فرصة عمل فى جميع المجالات والتخصصات، ونهدف إلى إعلاء العلم المصري خفاقًا بتوسع فروعنا على مستوى الدول العربية والغير عربية، فنحن ندرب الأيدى العاملة المصرية على الشموخ والظهور فى عموم الدول تحت شموخ العلم المصري المرفوع هامته بأيدي مصرية وكيان مصري.
+    </p>
+  </div>
+
+  <div class="slider">
+    <img src="https://i.postimg.cc/8s8Hmh1D/image.jpg" class="active" alt="Slide 1">
+    <img src="https://i.postimg.cc/JhRpFcjz/image.jpg" alt="Slide 2">
+    <img src="https://i.postimg.cc/9Q58djMT/image.jpg" alt="Slide 3">
+    <img src="https://i.postimg.cc/gjLshMbN/image.jpg" alt="Slide 4">
+    <img src="https://i.postimg.cc/ZKpttHv8/image.jpg" alt="Slide 5">
+    <img src="https://i.postimg.cc/Tw4QhzFK/image.jpg" alt="Slide 6">
+    <img src="https://i.postimg.cc/G3BnzdcS/image.jpg" alt="Slide 7">
+    <img src="https://i.postimg.cc/q7Q1HhGX/image.webp" alt="Slide 8">
+    <img src="https://i.postimg.cc/tRLQMwJR/image.jpg" alt="Slide 9">
+  </div>
+</section>
+
+<script>
+  const images = document.querySelectorAll('.slider img');
+  let current = 0;
+
+  function showSlide(index) {
+    images.forEach((img, i) => {
+      img.classList.remove('active');
+      if (i === index) {
+        img.classList.add('active');
+      }
+    });
+  }
+
+  setInterval(() => {
+    current = (current + 1) % images.length;
+    showSlide(current);
+  }, 3000); // 3 ثواني
+</script>
+
+</body>
+</html>
+
+<!-- عنوان جانبي قبل القسم -->
+<h2 id="manufacturing-title" style="text-align: center; font-size: 28px; font-weight: 800; margin: 40px 0 20px; color: #004080;">
+  تصنيع وتعبئة وتغليف المواد الغذائية
+</h2>
+
+<section id="manufacturing" class="service-section" style="background-image:url('https://i.postimg.cc/G3BnzdcS/image.jpg'); height: 400px; display: flex; align-items: flex-end; justify-content: center; text-align: center; padding-bottom: 20px;">
+  <div style="color: black; font-size: 24px; font-weight: 700; background-color: rgba(255, 255, 255, 0.7); padding: 20px; border-radius: 10px; max-width: 800px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+    نحن نقوم على تصنيع وتعبئة وتغليف المواد الغذائية بأعلى معايير الجودة والسلامة وبإستخدام أحدث التقنيات الحديثة مع التركيز على اللمسات الفنية فى مغلفات جذابة وآمنة تحافظ على سلامة المنتج وتعزز من قيمته التسويقية.
+  </div>
+</section>
+<!-- عنوان جانبي قبل القسم -->
+<h2 id="trade-title" style="text-align: center; font-size: 28px; font-weight: 800; margin: 40px 0 20px; color: #004080;">
+  التجارة العامة والتوريدات العمومية
+</h2>
+
+<section id="trade" class="service-section" style="
+  background-image: url('https://i.postimg.cc/ZKpttHv8/image.jpg');
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  height: 300px; /* يمكن تعديل الارتفاع حسب الحاجة */
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  text-align: center;
+  padding-bottom: 20px;
+" aria-label="التجارة العامة والتوريدات العمومية">
+  <div style="
+    color: black;
+    font-size: 24px;
+    font-weight: 700;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 800px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  ">
+    نحن نقوم بخدمات التجارة العامة والتوريدات العمومية في كافة متطلبات السوق المحلى والدولى بكفاءة عالية وسرعة إستجابة لمتطلبات السوق مع مراعاة شروط جودة المواد المطلوبة فنحن نسابق الزمان فى توفير سلسلة إمدادات لانهائية لكافة المتطلبات وذلك لتلبية إحتياجات عملائنا بدقة ومرونة.
+  </div>
+</section>
+<!-- عنوان جانبي قبل القسم -->
+<h2 id="land-title" style="text-align: center; font-size: 28px; font-weight: 800; margin: 40px 0 20px; color: #004080;">
+  إستصلاح وإستثمار الأراضي
+</h2>
+
+<section id="land" class="service-section" style="
+  background-image: url('https://i.postimg.cc/9Q58djMT/image.jpg');
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  height: 300px; /* تقدر تغير الارتفاع حسب الحاجة */
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  text-align: center;
+  padding-bottom: 20px;
+" aria-label="إستصلاح وإستثمار الأراضي">
+  <div style="
+    color: black;
+    font-size: 24px;
+    font-weight: 700;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 800px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  ">
+    نحن لدينا كوادر هندسية نفتخر بها متخصصين في إستصلاح الأراضي الزراعية لزيادة الرقعة الزراعية وتحويلها لمشروعات زراعية مستدامة تساهم في التنمية الإقتصادية وتعزز الأمن الغذائي والإستثمار الزراعى.
+  </div>
+</section>
+
+<!-- عنوان جانبي قبل قسم مشروعات الثروة الحيوانية والداجنة والسمكية -->
+<h2 id="animal-title" style="text-align: center; font-size: 28px; font-weight: 800; margin: 40px 0 20px; color: #004080;">
+  مشروعات الثروة الحيوانية والداجنة والسمكية
+</h2>
+
+<section id="animal" class="service-section" style="
+  background-image: url('https://i.postimg.cc/jSTVsfyG/image.jpg');
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  height: 300px; /* تقدر تغير الارتفاع حسب ما تحب */
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  text-align: center;
+  padding-bottom: 20px;
+" aria-label="مشروعات الثروة الحيوانية والداجنة والسمكية">
+  <div style="
+    color: black;
+    font-size: 24px;
+    font-weight: 700;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 800px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  ">
+    نحن ندير مشروعات متكاملة في مجالات الثروة الحيوانية والداجنة والسمكية معتمدين على أفضل الممارسات الحديثة لضمان أعلى مستويات الإنتاجية والجودة وتحقيق عوائد مستدامة تدعم الأمن الغذائي وتنمية الإقتصاد.
+  </div>
+</section>
+<!-- عنوان جانبي قبل قسم المقاولات العامة والتشطيبات -->
+<h2 id="contracting-title" style="text-align: center; font-size: 28px; font-weight: 800; margin: 40px 0 20px; color: #004080;">
+  المقاولات العامة والتشطيبات
+</h2>
+
+<section id="contracting" class="service-section" style="
+  background-image: url('https://i.postimg.cc/gjLshMbN/image.jpg');
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  height: 300px; /* تقدر تعدل الارتفاع */
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  text-align: center;
+  padding-bottom: 20px;
+" aria-label="المقاولات العامة والتشطيبات">
+  <div style="
+    color: black;
+    font-size: 24px;
+    font-weight: 700;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 800px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  ">
+    نفتخر بالإشراف وبتنفيذ العديد من كبرى مشروعات المقاولات بمختلف المجالات والتشطيبات بجودة عالية ووفق أعلى وآمن معايير هندسية مع الالتزام الصارم بالجداول الزمنية والتكاليف المحددة.
+  </div>
+</section>
+<!-- عنوان جانبي قبل قسم التطوير والتسويق العقاري -->
+<h2 id="realestate-title" style="text-align: center; font-size: 28px; font-weight: 800; margin: 40px 0 20px; color: #004080;">
+  التطوير والتسويق العقاري
+</h2>
+
+<section id="realestate" class="service-section" style="
+  background-image: url('https://i.postimg.cc/8s8Hmh1D/image.jpg');
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  height: 300px; /* يمكن تعديل الارتفاع حسب الحاجة */
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  text-align: center;
+  padding-bottom: 20px;
+" aria-label="التطوير والتسويق العقاري">
+  <div style="
+    color: black;
+    font-size: 24px;
+    font-weight: 700;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 800px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  ">
+    نوفر حلولًا مبتكرة ومرنة للتطوير والتسويق العقاري تواكب متطلبات السوق المستهدف وتحقق عوائد إستثمارية متميزة بما يجذب لنا العملاء الباحثين عن فرص إستثمارية موثوق بها في المجال العقاري.
+  </div>
+</section>
+<!-- عنوان جانبي قبل قسم إدارة وتمويل المشروعات الإستثمارية -->
+<h2 id="management-title" style="text-align: center; font-size: 28px; font-weight: 800; margin: 40px 0 20px; color: #004080;">
+  إدارة وتمويل المشروعات الإستثمارية
+</h2>
+
+<section id="management" class="service-section" style="
+  background-image: url('https://i.postimg.cc/Tw4QhzFK/image.jpg');
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  height: 300px; /* يمكن تعديل الارتفاع حسب الحاجة */
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  text-align: center;
+  padding-bottom: 20px;
+" aria-label="إدارة وتمويل المشروعات الإستثمارية">
+  <div style="
+    color: black;
+    font-size: 24px;
+    font-weight: 700;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 800px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  ">
+    ندير ونموّل المشروعات الإستثمارية بالقطاعات المستهدفة من خلال تقديم حلول إدارية ومالية متطورة تضمن النمو المستدام والإستمرارية الناجحة في بيئة أعمال تنافسية.
+  </div>
+</section>
+
+</section>
+<!-- عنوان جانبي قبل قسم إدارة التسويق والتجارة الإلكترونية -->
+<h2 id="management-title" style="text-align: center; font-size: 28px; font-weight: 800; margin: 40px 0 20px; color: #004080;">
+  التسويق والتجارة الإلكترونية
+</h2>
+
+<section id="marketing" class="service-section" style="
+  background-image: url('https://i.postimg.cc/q7Q1HhGX/image.webp');
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  height: 300px; /* يمكن تعديل الارتفاع حسب الحاجة */
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  text-align: center;
+  padding-bottom: 20px;
+" aria-label="التسويق والتجارة الإلكترونية">
+  <div style="
+    color: black;
+    font-size: 20px;
+    font-weight: 700;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 18px;
+    border-radius: 10px;
+    max-width: 800px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  ">
+    <p>
+نوفر حلولًا متكاملة في التسويق الإلكتروني والتجارة الرقمية تضمن الوصول الفعّال للعملاء من خلال إدارة الحملات الإعلانية بإحتراف وتصميم المتاجر الإلكترونية وتحليل البيانات والعمل على توفير فريق عمل مدرب ومحترف لتحقيق أفضل العوائد وتعزيز الإنتشار في الأسواق المحلية والعالمية.    </p>
+  </div>
+</section>
+
+  <section id="contact" aria-labelledby="contactTitle">
+    <h2 id="contactTitle">تواصل معنا</h2>
+    <p>📞 واتساب مباشر: <a href="https://wa.me/201006424552" target="_blank" rel="noopener noreferrer">01006424552</a></p>
+    <p>✉️ بريد إلكتروني: <a href="mailto:info@egyptianarabcomplex.com">info@egyptianarabcomplex.com</a></p>
+  </section>
+</main>
+
+<footer>
+  حقوق النشر © 2018 مجمع الشركات المصرية العربية الدولية. جميع الحقوق محفوظة.
+</footer>
+
+<script>
+  // دعم القائمة المنسدلة على الموبايل بالنقر
+  const dropdownToggle = document.querySelector('nav ul li.has-dropdown > a.dropdown-toggle');
+  const dropdownParent = dropdownToggle.parentElement;
+
+  dropdownToggle.addEventListener('click', e => {
+    e.preventDefault();
+    const isExpanded = dropdownToggle.getAttribute('aria-expanded') === 'true';
+    dropdownToggle.setAttribute('aria-expanded', String(!isExpanded));
+    dropdownParent.classList.toggle('show-dropdown');
+  });
+
+  // تغيير اللغة (مؤقت - تحذير فقط)
+  const langBtn = document.getElementById('langToggle');
+  langBtn.addEventListener('click', () => {
+    alert('نسخة اللغة الإنجليزية قيد التطوير حالياً.');
+  });
+</script>
+
+</body>
+</html>
